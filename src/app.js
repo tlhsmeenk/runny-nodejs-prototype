@@ -2,7 +2,7 @@ import http from 'http'
 import { env, port, ip, apiRoot } from './config'
 import express from './services/express'
 import api from './api'
-import ws_ from './services/ws'
+import ws_ from './api/ws'
 
 const WebSocket = require('ws')
 const app = express(apiRoot, api)
@@ -21,13 +21,5 @@ wss.on('connection', function connection (ws, req) {
   ws_.onSocketConnected(ws)
   ws_.setSocketHandlers(ws)
 })
-
-// const location = url.parse(req.url, true);
-// You might use location.query.access_token to authenticate or share sessions
-// or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
-
-// wss.clients.forEach(function process(e){
-//   console.log(e.userid)
-// })
 
 export default app
