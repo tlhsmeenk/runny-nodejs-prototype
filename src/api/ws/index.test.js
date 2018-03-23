@@ -22,19 +22,6 @@ expect.extend({
     console.log(Object.keys(argument))
     try {
       JSON.parse(received.mock.calls[0])
-
-      // Object.keys(argument).map(x => Object.create({key: x, valid: typeof asJson[x] !== 'undefined'})).forEach((key, i) => { console.log(key.key, key.valid) }).filter()
-      //
-      // // Object.keys(argument).forEach((key, i) => {
-      // //   if (typeof asJson[key] !== 'undefined') {
-      // //     return {
-      // //       message: () =>
-      // //         `${received.mock.calls[0]} does not contians ${key}!`,
-      // //       pass: false
-      // //     }
-      // //   }
-      // // })
-
       return {
         message: () =>
           `${received.mock.calls[0]} is a valid json!`,

@@ -18,11 +18,12 @@ info on the socket ;-)
 */
 const onSocketConnected = (socket) => {
   let run = db.generateRun()
-  let response = { run_id: run.run_id }
+  let response = { 'type': 'connected', 'payload': { 'run_id': run.run_id } }
 
   // Register this run to the socket
   socket.socket_id = run.run_id
   socket.joined_run_id = run.run_id
+  socket.run_ready = false
   // Send the response with the ID allowing other users to join
   socket.send(JSON.stringify(response))
 
@@ -45,7 +46,7 @@ const setSocketHandlers = (socket) => {
     try {
       handleMessageReceived(socket, message)
     } catch (err) {
-      socket.send('Error! Could not handle message! ' + err)
+      socket.send(JSON.stringify({'type': 'error', 'payload': { 'message': 'Error! Could not handle message! ' + err }}))
     }
   })
 }
@@ -76,6 +77,12 @@ function handleMessageReceived (socket, message) {
       break
     case 'update':
       handlers.handleUpdate(websocketServer, socket, payload)
+      break
+    case 'getRunners':
+      handlers.getRunners(websocketServer, socket)
+      break
+    case 'runnerReady':
+      handlers.ready(websocketServer, socket, payload)
       break
     default:
       socket.send('Warning! Could not handle message! Unsupported type')

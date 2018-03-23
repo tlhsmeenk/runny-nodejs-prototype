@@ -5,7 +5,7 @@
 */
 const handleSetName = (socket, payload) => {
   socket.socket_name = payload['name']
-  socket.send(`Seting your name to ${payload.name}`)
+  socket.send(JSON.stringify({'type': 'info', 'payload': { 'message': `Changed the name to to ${payload.name}` }}))
 }
 
 /*
@@ -14,7 +14,7 @@ const handleSetName = (socket, payload) => {
 */
 const handleJoin = (websocketServer, socket, payload) => {
   socket.joined_run_id = payload['runtojoin']
-  broadcastToRun(websocketServer, socket.joined_run_id, `${socket.socket_name} has joined the run!`)
+  broadcastToRun(websocketServer, socket.joined_run_id, JSON.stringify({'type': 'joined', 'payload': { 'message': `${socket.socket_name} has joined the run!`, 'name': socket.socket_name }}))
 }
 
 /*
@@ -23,6 +23,20 @@ const handleJoin = (websocketServer, socket, payload) => {
 const handleUpdate = (websocketServer, socket, payload) => {
   socket.last_location = { 'runner': socket.socket_id, 'longtitude': payload['longtitude'], 'latitude': payload['longtitude'] }
   broadcastToRun(websocketServer, socket.joined_run_id, JSON.stringify(socket.last_location))
+}
+
+const getRunners = (websocketServer, socket) => {
+  let runners = [...websocketServer.clients]
+    .filter(e => e.joined_run_id === socket.joined_run_id)
+    .map(e => e.socket_name)
+
+  socket.send(JSON.stringify({'type': 'getRunnerResponse', 'payload': { 'runners': runners }}))
+}
+
+const ready = (websocketServer, socket, payload) => {
+  console.log(payload.state)
+  socket.run_ready = payload.state
+  broadcastToRun(websocketServer, socket.joined_run_id, JSON.stringify({'type': 'runnerReadyResponse', 'payload': {'name': socket.socket_name, 'state': socket.run_ready}}))
 }
 
 /*
@@ -37,5 +51,7 @@ function broadcastToRun (websocketServer, id, msg) {
 module.exports = {
   handleSetName,
   handleJoin,
-  handleUpdate
+  handleUpdate,
+  getRunners,
+  ready
 }
