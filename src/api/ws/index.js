@@ -84,6 +84,9 @@ function handleMessageReceived (socket, message) {
     case 'runnerReady':
       handlers.ready(websocketServer, socket, payload)
       break
+    case 'startRun':
+      handlers.startRun(websocketServer, socket)
+      break
     default:
       socket.send('Warning! Could not handle message! Unsupported type')
   }

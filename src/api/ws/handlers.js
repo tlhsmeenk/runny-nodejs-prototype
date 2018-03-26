@@ -34,9 +34,17 @@ const getRunners = (websocketServer, socket) => {
 }
 
 const ready = (websocketServer, socket, payload) => {
-  console.log(payload.state)
   socket.run_ready = payload.state
   broadcastToRun(websocketServer, socket.joined_run_id, JSON.stringify({'type': 'runnerReadyResponse', 'payload': {'name': socket.socket_name, 'state': socket.run_ready}}))
+}
+
+const startRun = (websocketServer, socket) => {
+  [...websocketServer.clients]
+    .filter(e => e.joined_run_id === socket.joined_run_id)
+    .forEach(e => (e.run_started = true))
+
+  let startTime = new Date().getTime()
+  broadcastToRun(websocketServer, socket.joined_run_id, JSON.stringify({'type': 'runStarted', 'payload': {'time': startTime}}))
 }
 
 /*
@@ -53,5 +61,6 @@ module.exports = {
   handleJoin,
   handleUpdate,
   getRunners,
-  ready
+  ready,
+  startRun
 }
