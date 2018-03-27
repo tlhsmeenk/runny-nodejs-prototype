@@ -21,10 +21,13 @@ const handleJoin = (websocketServer, socket, payload) => {
   Update the last_location of the socket and notify the fellow runners
 */
 const handleUpdate = (websocketServer, socket, payload) => {
-  socket.last_location = { 'runner': socket.socket_id, 'longtitude': payload['longtitude'], 'latitude': payload['longtitude'] }
+  socket.last_location = {'type': 'update', 'payload': { 'runner': socket.socket_id, 'longtitude': payload['longtitude'], 'latitude': payload['longtitude'] }}
   broadcastToRun(websocketServer, socket.joined_run_id, JSON.stringify(socket.last_location))
 }
 
+/*
+  Get the names from all the sockets that are connected to the given run id
+*/
 const getRunners = (websocketServer, socket) => {
   let runners = [...websocketServer.clients]
     .filter(e => e.joined_run_id === socket.joined_run_id)
@@ -33,11 +36,17 @@ const getRunners = (websocketServer, socket) => {
   socket.send(JSON.stringify({'type': 'getRunnerResponse', 'payload': { 'runners': runners }}))
 }
 
+/*
+  Mark the sockets partaking in the run as ready to start
+*/
 const ready = (websocketServer, socket, payload) => {
   socket.run_ready = payload.state
   broadcastToRun(websocketServer, socket.joined_run_id, JSON.stringify({'type': 'runnerReadyResponse', 'payload': {'name': socket.socket_name, 'state': socket.run_ready}}))
 }
 
+/*
+  Start the run. All sockets will be marked as started and the start time will be broadcasted to each runner
+*/
 const startRun = (websocketServer, socket) => {
   [...websocketServer.clients]
     .filter(e => e.joined_run_id === socket.joined_run_id)
