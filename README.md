@@ -2,7 +2,15 @@
 
 A Websocket API created for runny prototypes
 
-See the API's [documentation](DOCS.md).
+
+## Playing locally
+
+Installation.
+
+1. Clone this repository using git clone https://github.com/tlhsmeenk/runny-nodejs-prototype
+2. Go the the root of the cloned repository and type npm install
+3. Create a .env in the root of the project and add MASTER_KEY=masterKey. Save the file.
+4. To run the project as a dev type npm run dev from the root of the repository
 
 ## Commands
 
@@ -15,6 +23,27 @@ npm run lint # lint using ESLint
 npm run dev # run the API in development mode
 npm run prod # run the API in production mode
 npm run docs # generate API docs
+```
+
+## Websocket Commands
+
+Every websocket command will expect the following base structure:
+
+```json
+{
+  "type":"{NAME_OF_THE_COMMAND}",
+  "payload":{
+    "command_specific": "The payload will contain the command specific fields"
+  }
+}
+```
+
+After connecting to the websocket you can use the following commands (send as json):
+
+```json
+{
+
+}
 ```
 
 ## Playing locally
