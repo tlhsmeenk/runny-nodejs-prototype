@@ -69,7 +69,7 @@ function handleMessageReceived (socket, message) {
   let payload = msgAsJson['payload']
 
   switch (type) {
-    case 'setname':
+    case 'set-name':
       handlers.handleSetName(socket, payload)
       break
     case 'join':

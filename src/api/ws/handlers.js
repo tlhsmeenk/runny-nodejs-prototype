@@ -6,7 +6,7 @@ import geo from '../../services/geo'
 */
 const handleSetName = (socket, payload) => {
   socket.socket_name = payload['name']
-  socket.send(JSON.stringify({'type': 'info', 'payload': { 'message': `Changed the name to to ${payload.name}` }}))
+  socket.send(JSON.stringify({'type': 'info', 'payload': { 'message': `Changed the name to ${payload.name}` }}))
 }
 
 /*

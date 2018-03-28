@@ -38,9 +38,20 @@ Every websocket command will expect the following base structure:
 }
 ```
 
-After connecting to the websocket you can use the following commands (send as json):
+After connecting to the websocket you will receive a response from the server:
 
-### Set the runners name =>
+```json
+{
+  "type":"connected",
+  "payload":{
+    "run-id": "432ER"
+  }
+}
+```
+The run ID can be used to let other users join your run. AFter receiving the connected message the followings commands are available:
+
+
+### Set the runners name:
 
 ```json
 {
@@ -60,18 +71,23 @@ Response =>
 }
 ```
 
+### Set the runners name:
 
-## Playing locally
-
-Run the server in development mode.
-
-```bash
-$ npm run dev
-Express server listening on http://0.0.0.0:9000, in development mode
+```json
+{
+  "type":"join",
+  "payload":{
+    "runtojoin": "The ID of the run to join. See the connected bit of this part of the readme"
+  }
+}
 ```
-
-## Directory structure
-
-### Overview
-
-You can customize the `src` and `api` directories.
+Response (Send to every runner that's connected to the run!) =>
+```json
+{
+  "type":"joined",
+  "payload":{
+    "message": "${name} has joined the run!",
+    "name": "Name the runner has set to him/herself using the set-name command. Can be undefined!"
+  }
+}
+```
