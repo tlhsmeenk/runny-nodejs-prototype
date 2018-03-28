@@ -19,7 +19,6 @@ describe('connected', () => {
 
 expect.extend({
   toBeValidJsonContaining (received, argument) {
-    console.log(Object.keys(argument))
     try {
       JSON.parse(received.mock.calls[0])
       return {

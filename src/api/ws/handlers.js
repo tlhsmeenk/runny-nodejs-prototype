@@ -1,3 +1,4 @@
+import geo from '../../services/geo'
 
 /*
   Setting a name to the socket. For now we're just abusing the connection to store user
@@ -21,7 +22,14 @@ const handleJoin = (websocketServer, socket, payload) => {
   Update the last_location of the socket and notify the fellow runners
 */
 const handleUpdate = (websocketServer, socket, payload) => {
-  socket.last_location = {'type': 'update', 'payload': { 'runner': socket.socket_id, 'longtitude': payload['longtitude'], 'latitude': payload['longtitude'] }}
+  let update = {'type': 'runner-state', 'payload': { 'runner': socket.socket_id, 'longtitude': payload['longtitude'], 'latitude': payload['latitude'] }}
+
+  // If there is no last known location we're only registering the first point traveled. If not calculate the distance
+  !socket.last_location ? update.payload['distance'] = 0 : update.payload['distance'] = geo.distance({ 'longtitude': payload['longtitude'], 'latitude': payload['latitude'] }
+    , { 'longtitude': socket.last_location.payload['longtitude'], 'latitude': socket.last_location.payload['latitude'] })
+
+  socket.last_location = update
+
   broadcastToRun(websocketServer, socket.joined_run_id, JSON.stringify(socket.last_location))
 }
 

@@ -1,7 +1,7 @@
-import loki from 'lokijs'
+import Loki from 'lokijs'
 import run from '../run'
 
-const db = new loki('loki.json')
+const db = new Loki('loki.json')
 const runs = db.addCollection('runs')
 
 exports.generateRun = function () {

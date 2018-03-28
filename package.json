@@ -59,6 +59,8 @@
     "querymen": "^2.1.3",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
+    "turf": "^3.0.14",
+    "turf-distance": "^3.0.12",
     "ws": "^5.1.0",
     "z": "^1.0.4"
   }
