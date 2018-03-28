@@ -32,7 +32,7 @@ Every websocket command will expect the following base structure:
 ```json
 {
   "type":"{NAME_OF_THE_COMMAND}",
-  "payload":{
+  "payload [Optional]":{
     "command_specific": "The payload will contain the command specific fields"
   }
 }
@@ -71,7 +71,7 @@ Response =>
 }
 ```
 
-### Set the runners name:
+### Join a run:
 
 ```json
 {
@@ -88,6 +88,44 @@ Response (Send to every runner that's connected to the run!) =>
   "payload":{
     "message": "${name} has joined the run!",
     "name": "Name the runner has set to him/herself using the set-name command. Can be undefined!"
+  }
+}
+```
+
+### Get the names of the runners partaking in the run:
+
+```json
+{
+  "type":"get-runners"
+}
+```
+Response (Send to every runner that's connected to the run!) =>
+```json
+{
+  "type":"get-runners_response",
+  "payload":{
+    "runners": ["runner1", "runner2"]
+  }
+}
+```
+
+### Update wheter the connected runner is ready or not. Runners cannot be forced to be ready by other runners:
+
+```json
+{
+  "type":"runner-readystate-update",
+  "payload":{
+    "state": true
+  }
+}
+```
+Response (Send to every runner that's connected to the run!) =>
+```json
+{
+  "type":"runner-readystate-update_response",
+  "payload":{
+    "name": "name of the runner that changed it state",
+    "state": true //state the runner changed to
   }
 }
 ```

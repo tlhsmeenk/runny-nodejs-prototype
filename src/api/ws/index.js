@@ -78,13 +78,13 @@ function handleMessageReceived (socket, message) {
     case 'update':
       handlers.handleUpdate(websocketServer, socket, payload)
       break
-    case 'getRunners':
+    case 'get-runners':
       handlers.getRunners(websocketServer, socket)
       break
-    case 'runnerReady':
+    case 'runner-readystate-update':
       handlers.ready(websocketServer, socket, payload)
       break
-    case 'startRun':
+    case 'start-run':
       handlers.startRun(websocketServer, socket)
       break
     default:

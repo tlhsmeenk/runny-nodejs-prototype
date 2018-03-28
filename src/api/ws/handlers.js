@@ -41,7 +41,7 @@ const getRunners = (websocketServer, socket) => {
     .filter(e => e.joined_run_id === socket.joined_run_id)
     .map(e => e.socket_name)
 
-  socket.send(JSON.stringify({'type': 'getRunnerResponse', 'payload': { 'runners': runners }}))
+  socket.send(JSON.stringify({'type': 'get-runner_response', 'payload': { 'runners': runners }}))
 }
 
 /*
@@ -49,7 +49,7 @@ const getRunners = (websocketServer, socket) => {
 */
 const ready = (websocketServer, socket, payload) => {
   socket.run_ready = payload.state
-  broadcastToRun(websocketServer, socket.joined_run_id, JSON.stringify({'type': 'runnerReadyResponse', 'payload': {'name': socket.socket_name, 'state': socket.run_ready}}))
+  broadcastToRun(websocketServer, socket.joined_run_id, JSON.stringify({'type': 'runner-readystate-update_response', 'payload': {'name': socket.socket_name, 'state': socket.run_ready}}))
 }
 
 /*
