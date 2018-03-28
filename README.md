@@ -40,11 +40,26 @@ Every websocket command will expect the following base structure:
 
 After connecting to the websocket you can use the following commands (send as json):
 
+Set the runners name =>
+
 ```json
 {
-
+  "type":"set-name",
+  "payload":{
+    "name": "Desired name of the user"
+  }
 }
 ```
+Response =>
+```json
+{
+  "type":"info",
+  "payload":{
+    "name": "Changed the name to ${payload.name}"
+  }
+}
+```
+
 
 ## Playing locally
 
