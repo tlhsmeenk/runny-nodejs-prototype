@@ -40,7 +40,7 @@ Every websocket command will expect the following base structure:
 
 After connecting to the websocket you can use the following commands (send as json):
 
-###### Set the runners name =>
+### Set the runners name =>
 
 ```json
 {
