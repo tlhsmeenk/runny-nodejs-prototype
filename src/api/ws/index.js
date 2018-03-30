@@ -69,7 +69,7 @@ function handleMessageReceived (socket, message) {
   let payload = msgAsJson['payload']
 
   switch (type) {
-    case 'set-name':
+    case 'setname':
       handlers.handleSetName(socket, payload)
       break
     case 'join':
@@ -78,17 +78,17 @@ function handleMessageReceived (socket, message) {
     case 'update':
       handlers.handleUpdate(websocketServer, socket, payload)
       break
-    case 'get-runners':
+    case 'getRunners':
       handlers.getRunners(websocketServer, socket)
       break
-    case 'runner-readystate-update':
+    case 'runnerReady':
       handlers.ready(websocketServer, socket, payload)
       break
-    case 'start-run':
+    case 'startRun':
       handlers.startRun(websocketServer, socket)
       break
     default:
-      socket.send({'type': 'error', 'payload': {'message': 'Warning! Could not handle message! Unsupported type'}})
+      socket.send(JSON.stringify({'type': 'error', 'payload': { 'message': `Could not handle message of type ${type}` }}))
   }
 }
 
