@@ -37,7 +37,7 @@ describe('onUpdate', () => {
 
     expect(socket.last_location).toBeDefined()
     expect(socket.last_location['type']).toBeDefined()
-    expect(socket.last_location['type']).toEqual('runner-state')
+    expect(socket.last_location['type']).toEqual('runner-update_response')
   })
 })
 
