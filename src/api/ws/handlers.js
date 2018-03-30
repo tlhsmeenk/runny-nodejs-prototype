@@ -45,7 +45,7 @@ const getRunners = (websocketServer, socket) => {
     .filter(e => e.joined_run_id === socket.joined_run_id)
     .map(e => e.socket_name)
 
-  socket.send(JSON.stringify({'type': 'get-runner_response', 'payload': { 'runners': runners }}))
+  socket.send(JSON.stringify({'type': 'get-runners_response', 'payload': { 'runners': runners }}))
 }
 
 /*
