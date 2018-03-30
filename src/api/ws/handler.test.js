@@ -1,4 +1,4 @@
-const handlers = require('./handlers')
+const handlers = require('./handler')
 
 let websocketServer, socket, payload
 

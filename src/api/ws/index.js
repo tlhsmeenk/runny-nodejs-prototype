@@ -1,5 +1,5 @@
-import db from '../../services/loki'
-import handlers from './handlers'
+import DB from '../../services/loki'
+import MESSAGE_HANDLER from './handler'
 
 // local instance of the websocketserver singleton
 var websocketServer = {}
@@ -17,7 +17,7 @@ to the user so it can be used to join this run. For now we're storing all our
 info on the socket ;-)
 */
 const onSocketConnected = (socket) => {
-  let run = db.generateRun()
+  let run = DB.generateRun()
   let response = { 'type': 'connected', 'payload': { 'run_id': run.run_id } }
 
   // Register this run to the socket
@@ -32,16 +32,16 @@ const onSocketConnected = (socket) => {
 }
 
 /*
-Apply all the handlers on the socket. Typically you'll want to call this when
+Apply all the MESSAGE_HANDLERs on the socket. Typically you'll want to call this when
 the socket has connected.
 */
 const setSocketHandlers = (socket) => {
-  // On connection lost handler
+  // On connection lost MESSAGE_HANDLER
   socket.on('close', () => {
     console.log('Lost connection ' + socket.socket_id)
   })
 
-  // On message received handler
+  // On message received MESSAGE_HANDLER
   socket.on('message', (message) => {
     try {
       handleMessageReceived(socket, message)
@@ -70,22 +70,22 @@ function handleMessageReceived (socket, message) {
 
   switch (type) {
     case 'setname':
-      handlers.handleSetName(socket, payload)
+      MESSAGE_HANDLER.handleSetName(socket, payload)
       break
     case 'join':
-      handlers.handleJoin(websocketServer, socket, payload)
+      MESSAGE_HANDLER.handleJoin(websocketServer, socket, payload)
       break
     case 'update':
-      handlers.handleUpdate(websocketServer, socket, payload)
+      MESSAGE_HANDLER.handleUpdate(websocketServer, socket, payload)
       break
     case 'getRunners':
-      handlers.getRunners(websocketServer, socket)
+      MESSAGE_HANDLER.getRunners(websocketServer, socket)
       break
     case 'runnerReady':
-      handlers.ready(websocketServer, socket, payload)
+      MESSAGE_HANDLER.ready(websocketServer, socket, payload)
       break
     case 'startRun':
-      handlers.startRun(websocketServer, socket)
+      MESSAGE_HANDLER.startRun(websocketServer, socket)
       break
     default:
       socket.send(JSON.stringify({'type': 'error', 'payload': { 'message': `Could not handle message of type ${type}` }}))

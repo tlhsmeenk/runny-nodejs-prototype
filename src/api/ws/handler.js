@@ -1,4 +1,5 @@
-import geo from '../../services/geo'
+import GEO from '../../services/geo'
+import MESSAGES from './messages'
 
 /*
   Setting a name to the socket. For now we're just abusing the connection to store user
@@ -6,7 +7,7 @@ import geo from '../../services/geo'
 */
 const handleSetName = (socket, payload) => {
   socket.socket_name = payload['name']
-  socket.send(JSON.stringify({'type': 'set-name_response', 'payload': { 'message': `Changed the name to ${payload.name}` }}))
+  socket.send(MESSAGES.setNameResponse(socket.socket_name))
 }
 
 /*
@@ -16,15 +17,7 @@ const handleSetName = (socket, payload) => {
 const handleJoin = (websocketServer, socket, payload) => {
   socket.joined_run_id = payload['run-to-join']
 
-  broadcastToRun(websocketServer, socket.joined_run_id,
-    JSON.stringify(
-      { 'type': 'join_response',
-        'payload':
-          {
-            'message': `${socket.socket_name} has joined the run!`,
-            'name': socket.socket_name
-          }
-      }))
+  broadcastToRun(websocketServer, socket.joined_run_id, MESSAGES.joinResponse(socket.socket_name))
 }
 
 /*
@@ -37,7 +30,7 @@ const handleUpdate = (websocketServer, socket, payload) => {
   !socket.last_location
     ? update.payload['distance'] = 0
     : update.payload['distance'] =
-      geo.distance(
+      GEO.distance(
         { 'longtitude': payload['longtitude'], 'latitude': payload['latitude'] },
         { 'longtitude': socket.last_location.payload['longtitude'], 'latitude': socket.last_location.payload['latitude'] })
 
@@ -54,7 +47,7 @@ const getRunners = (websocketServer, socket) => {
     .filter(e => e.joined_run_id === socket.joined_run_id)
     .map(e => e.socket_name)
 
-  socket.send(JSON.stringify({'type': 'get-runners_response', 'payload': { 'runners': runners }}))
+  socket.send(MESSAGES.getRunnersResponse(runners))
 }
 
 /*
@@ -63,15 +56,7 @@ const getRunners = (websocketServer, socket) => {
 const ready = (websocketServer, socket, payload) => {
   socket.run_ready = payload.state
 
-  broadcastToRun(websocketServer, socket.joined_run_id, JSON.stringify(
-    {
-      'type': 'runner-readystate-update_response',
-      'payload':
-        {
-          'name': socket.socket_name,
-          'state': socket.run_ready
-        }
-    }))
+  broadcastToRun(websocketServer, socket.joined_run_id, MESSAGES.readyResponse(socket.socket_name, socket.run_ready))
 }
 
 /*
@@ -83,12 +68,7 @@ const startRun = (websocketServer, socket) => {
     .forEach(e => (e.run_started = true))
 
   let startTime = new Date().getTime()
-  broadcastToRun(websocketServer, socket.joined_run_id,
-    JSON.stringify(
-      {
-        'type': 'start-run_response',
-        'payload': {'time': startTime}
-      }))
+  broadcastToRun(websocketServer, socket.joined_run_id, MESSAGES.startRunResponse(startTime))
 }
 
 /*
