@@ -22,7 +22,7 @@ const handleJoin = (websocketServer, socket, payload) => {
   Update the last_location of the socket and notify the fellow runners
 */
 const handleUpdate = (websocketServer, socket, payload) => {
-  let update = {'type': 'runner-update_response', 'payload': { 'runner': socket.socket_id, 'longtitude': payload['longtitude'], 'latitude': payload['latitude'] }}
+  let update = {'type': 'runner-update_response', 'payload': { 'runner': socket.socket_name, 'longtitude': payload['longtitude'], 'latitude': payload['latitude'] }}
 
   // If there is no last known location we're only registering the first point traveled. If not calculate the distance
   !socket.last_location
