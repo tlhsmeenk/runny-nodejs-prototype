@@ -15,7 +15,16 @@ const handleSetName = (socket, payload) => {
 */
 const handleJoin = (websocketServer, socket, payload) => {
   socket.joined_run_id = payload['run-to-join']
-  broadcastToRun(websocketServer, socket.joined_run_id, JSON.stringify({'type': 'join_response', 'payload': { 'message': `${socket.socket_name} has joined the run!`, 'name': socket.socket_name }}))
+
+  broadcastToRun(websocketServer, socket.joined_run_id,
+    JSON.stringify(
+      { 'type': 'join_response',
+        'payload':
+          {
+            'message': `${socket.socket_name} has joined the run!`,
+            'name': socket.socket_name
+          }
+      }))
 }
 
 /*
@@ -53,7 +62,16 @@ const getRunners = (websocketServer, socket) => {
 */
 const ready = (websocketServer, socket, payload) => {
   socket.run_ready = payload.state
-  broadcastToRun(websocketServer, socket.joined_run_id, JSON.stringify({'type': 'runner-readystate-update_response', 'payload': {'name': socket.socket_name, 'state': socket.run_ready}}))
+
+  broadcastToRun(websocketServer, socket.joined_run_id, JSON.stringify(
+    {
+      'type': 'runner-readystate-update_response',
+      'payload':
+        {
+          'name': socket.socket_name,
+          'state': socket.run_ready
+        }
+    }))
 }
 
 /*
@@ -65,7 +83,12 @@ const startRun = (websocketServer, socket) => {
     .forEach(e => (e.run_started = true))
 
   let startTime = new Date().getTime()
-  broadcastToRun(websocketServer, socket.joined_run_id, JSON.stringify({'type': 'start-run_response', 'payload': {'time': startTime}}))
+  broadcastToRun(websocketServer, socket.joined_run_id,
+    JSON.stringify(
+      {
+        'type': 'start-run_response',
+        'payload': {'time': startTime}
+      }))
 }
 
 /*

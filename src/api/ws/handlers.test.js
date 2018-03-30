@@ -3,6 +3,7 @@ const handlers = require('./handlers')
 let websocketServer, socket, payload
 
 const SOCKET_ID = 1337
+const SOCKET_NAME = 'Hans von Diehard'
 const LOCATION_UPDATE_COMMAND_PAYLOAD =
 {
   'longtitude': 6.218671,
@@ -23,6 +24,7 @@ const PREVIOUS_LOCATION =
 beforeEach(() => {
   socket = {
     'socket_id': SOCKET_ID,
+    'socket_name': SOCKET_NAME,
     send: jest.fn((msg) => socket)
   }
   payload = LOCATION_UPDATE_COMMAND_PAYLOAD
@@ -47,7 +49,7 @@ describe('onUpdate', () => {
 
     expect(socket.last_location).toBeDefined()
     expect(socket.last_location.payload['runner']).toBeDefined()
-    expect(socket.last_location.payload['runner']).toEqual(SOCKET_ID)
+    expect(socket.last_location.payload['runner']).toEqual(SOCKET_NAME)
     expect(socket.last_location.payload['distance']).toBeDefined()
     expect(socket.last_location.payload['distance']).toEqual(0)
     expect(socket.last_location.payload['longtitude']).toBeDefined()
