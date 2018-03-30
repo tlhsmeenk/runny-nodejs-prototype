@@ -14,7 +14,7 @@ const handleSetName = (socket, payload) => {
   event to any socket matching the joined_id of join request
 */
 const handleJoin = (websocketServer, socket, payload) => {
-  socket.joined_run_id = payload['runtojoin']
+  socket.joined_run_id = payload['run-to-join']
   broadcastToRun(websocketServer, socket.joined_run_id, JSON.stringify({'type': 'join_response', 'payload': { 'message': `${socket.socket_name} has joined the run!`, 'name': socket.socket_name }}))
 }
 
